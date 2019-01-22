@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>GUESTBOOK</h1>
+    <ul>
+        {% for m in messages %}
+            <li>{{m.name_p}} - {{m.message}}</li>
+        {% endfor %} <!--Jinja에선 꼭 닫는 명령 필요-->
+    </ul>
+</body>
+</html>
