@@ -18,6 +18,13 @@ from django.urls import path
 from pages import views #views파일을 불러옴
 
 urlpatterns = [
+    path('bootstrap/',views.bootstrap),
+    path('naver/',views.naver),
+    path('catch/', views.catch),
+    path('throw/', views.throw),
+    path('ediya/<str:who>/', views.ediya),
+    path('hello/<str:name>/', views.hello),
+    path('dinner/', views.dinner),
     path('index/', views.index),
     path('admin/', admin.site.urls),
 ]
