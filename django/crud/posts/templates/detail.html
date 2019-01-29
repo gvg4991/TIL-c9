@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Post Detail</h1>
+    <!--뷰즈에서 입력된 post를 이용하여 데이터를 저장-->
+    <h2>Title : {{ post.title }}</h2>
+    <p>Content : {{ post.content }}</p>
+    <a href="/posts/">list</a>
+    <a href="/posts/{{ post.pk }}/delete/">Delete</a>
+    <a href="/posts/{{ post.pk }}/edit/">Edit</a>
+    <!--동적으로 들어오는 키 데이터를 삭제-->
+</body>
+</html>

@@ -7,13 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Post Index</h1>
+    <h1>Save Index</h1>
     <!--new.html로 이동하는 New링크 만들기-->
-    <a href="/posts/new/">New</a>
+    <a href="/new/">New</a>
     <ul>
     <!--뷰즈의 index함수를 통해 입력된 posts값을 하나씩 불러옴-->
-    {% for post in posts %}
-        <li><a href="/posts/{{post.pk}}/">{{ post.title }}</a></li>
+    {% for saves in save %}
+        <li><a href="/{{saves.pk}}/">{{ saves.name }}</a></li>
         <!--포스트의 프라이머리키를 가지고 와서 주소창의 input값으로 넣음-->
         <!--링크를 통해서 posts/ket값의 post로 페이지 이동 가능-->
     {% endfor %}

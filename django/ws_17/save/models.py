@@ -7,6 +7,6 @@ class Save(models.Model):
     age = models.IntegerField()
         
     def __str__(self):
-        return self.title 
+        return self.name 
 
 # Create your models here.

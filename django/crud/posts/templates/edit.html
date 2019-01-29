@@ -7,11 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/posts/create/" method="post">    
-    <!--create에 post메소드로 작용-->
-        {% csrf_token %} <!--post메소드에선 작성-->
-        <input type="text" name="title"/>
-        <input type="text" name="content"/>
+    <h1>Post Edit</h1>
+    <form action="/posts/{{ post.pk }}/update/" method="post">
+        {% csrf_token %}
+        <input type="text" name="title" value="{{ post.title }}"/>
+        <input type="text" name="content" value="{{ post.content }}"/>
         <input type="submit" value="Submit"/>
     </form>
 </body>

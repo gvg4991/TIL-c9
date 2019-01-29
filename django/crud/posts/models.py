@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Post(models.Model):
+class Post(models.Model):   #Post 클래스를 생성
     title = models.CharField(max_length=100)
     content = models.TextField()
     
