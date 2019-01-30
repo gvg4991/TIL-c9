@@ -7,33 +7,14 @@ class Post(models.Model):   #Post 클래스를 생성
     
     def __str__(self):
         return self.title   #post object로 뜨지않고 title을 보여줌
+        
+# Post : Comment = 1 : N
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE) #외부 다른테이블의 키값을 가지고 와서 저장함
+    content = models.TextField()
     
-# 1. Creat
-# post = Post(title='hello', content='world!')
-# post.save()
-
-# 2. Read
-# 2.1. All
-# posts = Post.objects.all() 포스트 데이터 베이스를 포스츠라는 변수에 저장
-# 2.2. Get one
-# post = Post.objects.get(pk=1) 장고는 id가 아니라 pk를 사용
-# 2.3. filter (WHERE)
-# posts = Post.objects.filter(title='Hello').all()
-# post = Post.objects.filter(title='Hello').first()
-# 2.4. Like
-# posts = Post.objects.filter(title__contains='He').all()
-# 2.5. orser_by (정렬)
-# posts = Post.objects.order_by('title').all()  <-오름차순
-# posts = Post.objects.order_by('-title').all() <-내임차순
-# 2.6. offset & limit
-# [offset:offset+limit]
-# posts = Post.objects.all()[1:2]   <-오프셋 1만큼, 리미트 2만큼
-
-# 3. Delete
-# post = Post.objects.get(pk=2)
-# post.delete()
-
-# 4. Update
-# post = Post.objects.get(pk=1) <- hello
-# post.title = 'yo'             <- 인스턴스 yo
-# post.save()                   <- yo
+    # on_delete 옵션
+    # 1. CASCADE : 부모가 삭제되면, 자기 자신도 삭제. ex) 포스트가 사라지면 댓글도 같이 사라짐
+    # 2. PROTECT : 자식이 존재하면, 부모 삭제 불가능.
+    # 3. SET_NULL : 부모가 삭제되면, 자식의 부모 정보를 NULL로 변경
+    

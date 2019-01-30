@@ -15,5 +15,21 @@
     <a href="{% url 'posts:delete' post.pk %}">Delete</a>
     <a href="{% url 'posts:edit' post.pk %}">Edit</a>
     <!--동적으로 들어오는 키 데이터를 삭제-->
+    
+    <hr>
+    
+    <form action="{% url 'posts:comments_create' post.pk %}" method="post">
+        {% csrf_token %}
+        댓글 : <input type="text" name="content"/>
+        <input type="submit" value="Submit"/>
+    </form>
+    
+    <ul>
+        <!--파이썬이 아닌 또 다른 언어라서 이렇게 작성한다라고만 알기!-->
+        {% for comment in post.comment_set.all %}
+            <li>{{ comment.content }} - <a href="{% url 'posts:comments_delete' post.pk comment.pk %}">Delete</a></li>
+        {% endfor %}
+    </ul>
+    
 </body>
 </html>

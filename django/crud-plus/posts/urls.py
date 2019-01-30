@@ -13,5 +13,7 @@ urlpatterns = [
     path('<int:post_id>/',views.detail, name='detail'), #post의 id를 이용한 동적인 주소만 있을 경우 detail 창으로
     path('<int:post_id>/delete/', views.delete, name='delete'),
     path('<int:post_id>/edit/', views.edit, name='edit'),
-    path('<int:post_id>/update/', views.update, name='update')
+    path('<int:post_id>/update/', views.update, name='update'),
+    path('<int:post_id>/comments/create/', views.comments_create, name='comments_create'), #뷰즈에서 만든 comments_create함수 이용
+    path('<int:post_id>/comments/<int:comment_id>/delete/',views.comments_delete, name='comments_delete'),
 ]

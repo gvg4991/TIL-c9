@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Post #현재 폴더에 있는 모델스라는 파일에서 Post클래스를 이용한다. 
+from .models import Post, Comment #현재 폴더에 있는 모델스라는 파일에서 Post클래스를 이용한다. 
 
 # Create your views here.
 
@@ -43,6 +43,21 @@ def update(request, post_id):
     post.content = request.POST.get('content')
     post.save() #실제로 멤버변수에 방영하기
     return redirect('posts:detail',post.pk)
+    
+def comments_create(request, post_id):
+    # 댓글 달 게시물c
+    post = Post.objects.get(pk=post_id)
+    # form에서 넘어온 댓글 내용
+    content = request.POST.get('content')
+    # 댓글 생성 및 저장
+    comment = Comment(post=post, content=content)
+    comment.save()
+    return redirect('posts:detail',post.pk)     #redirect에서 url명으로 들어가는 형태
+    
+def comments_delete(request, post_id, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    comment.delete()
+    return redirect('posts:detail', post_id)
     
 # # 외부로 보내는 redirect
 # def naver(request, q):
