@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Post Index</h1>
+    <!--new.html로 이동하는 New링크를 진자 문법으로 링크명을 이용하여 만들기-->
+    <a href="{% url 'posts:new' %}">New</a>
+    <ul>
+    <!--뷰즈의 index함수를 통해 입력된 posts값을 하나씩 불러옴-->
+    {% for post in posts %}
+        <li><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></li>
+        <!--포스트의 프라이머리키를 가지고 와서 주소창의 input값으로 넣음-->
+        <!--링크를 통해서 posts/ket값의 post로 페이지 이동 가능-->
+    {% endfor %}
+    </ul>
+</body>
+</html>
