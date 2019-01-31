@@ -11,7 +11,7 @@ class Post(models.Model):   #Post 클래스를 생성
     # image = models.ImageField(blank=True)
     image = ProcessedImageField(
             upload_to='posts/images', #저장 위치
-            processors=[ResizeToFill(300,300)], #처리할 작업 목록
+            processors=[ResizeToFill(300,100)], #처리할 작업 목록
             format='JPEG',
             options={'quality':90},
         )
