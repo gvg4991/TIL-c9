@@ -1,0 +1,15 @@
+{% extends 'base.html' %} <!--base.html에 접근하겠다.-->
+{% load static %}
+{% block container %}
+    <!--enctype:multipart/form-data (binary 전송 가능)
+                application/x-www-form-urlencoded (기본값)-->
+    <form method="post" enctype="multipart/form-data">    
+    <!--create에 post메소드로 작용-->
+        {% csrf_token %} <!--post메소드에선 작성-->
+        <input type="text" name="title"/>
+        <input type="text" name="content"/>
+        <input type="file" name="image" accept="image/*"/>
+        <!--accept로 image형식의 파일만 받음, *은 파일 종류 jpg등등-->
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}

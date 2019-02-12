@@ -1,0 +1,20 @@
+{% extends 'base.html' %} <!--base.html에 접근하겠다.-->
+{% load static %}
+{% block container %}
+    <img src="{% static 'yo.jpg' %}">
+    <h1>Post Index</h1>
+    <!--new.html로 이동하는 New링크를 진자 문법으로 링크명을 이용하여 만들기-->
+    <!--로그인 되어 있을때만 뉴버튼 뜨기-->
+    {% if user.is_authenticated %}
+        <a href="{% url 'posts:new' %}">New</a>
+    {% endif %}
+    
+    <ul>
+    <!--뷰즈의 index함수를 통해 입력된 posts값을 하나씩 불러옴-->
+    {% for post in posts %}
+        <li><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></li>
+        <!--포스트의 프라이머리키를 가지고 와서 주소창의 input값으로 넣음-->
+        <!--링크를 통해서 posts/ket값의 post로 페이지 이동 가능-->
+    {% endfor %}
+{% endblock %}
+    </ul>
