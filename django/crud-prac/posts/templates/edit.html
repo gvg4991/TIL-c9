@@ -1,0 +1,12 @@
+{% extends 'base.html' %} <!--base.html에 접근하겠다.-->
+{% load static %}
+{% block container %}
+    <h1>Post Edit</h1>
+    <form method="post">
+        <!-- form에서 action=" url 'posts:update' post.pk " 제거-->
+        {% csrf_token %}
+        <input type="text" name="title" value="{{ post.title }}"/>
+        <input type="text" name="content" value="{{ post.content }}"/>
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}

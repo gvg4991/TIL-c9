@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!--base.html에 접근하겠다-->
+
+{% block 컨테이너 이름 %}
+    <h1>문자들어가고</h1>
+    
+    <!--새로운 포스트를 추가하는 링크 추가-->
+    <a href="{% url 'posts:new' %}">new</a>
+    <!--1. 진자 명령어를 통하여 url을 이름으로 접근-->
+    <a href="posts/new/">new</a>
+    <!--2. 뉴라는 url로 이동-->
+    
+    <!--ul형식으로 포스트 전체를 나열-->
+    <ul>
+        <!--뷰즈의 index 함수를 통해 입력된 posts값을 하나씩 불러오는 진자 명령어-->
+        {% for post in posts %}
+            <!--들여쓰기 중요!-->
+            <li><a href="{% url 'posts:detail' post.pk %}">{{post.title}}</a></li>
+            <!--진자 명령어 형식-->
+            <li><a href="posts/{{post.pk}}">{{post.title}}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
