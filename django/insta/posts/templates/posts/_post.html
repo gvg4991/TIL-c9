@@ -1,0 +1,11 @@
+<!--다른 곳에서도 쓰일 수 있기때문에 따로 뽑아줌
+파일이름에 언더바_가 있으면 부분적으로 쓰일 수 있는 파일을 의미시킴-->
+
+<div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <p class="card-text">{{ post.content }}</p>
+    <a href="{% url 'posts:delete' post.id %}" class="btn btn-primary">Delete</a>
+    <!--post의 아이디를 받음-->
+  </div>
+</div>

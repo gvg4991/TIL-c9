@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+<!--로드를 해줄땐 extends와 block 사이에 해줌-->
+{% load bootstrap4 %}
+
+{% block container %}
+
+<h1>New Post</h1>
+<form method='post'> <!--액션이 없으면 자기자신 페이지에 반환시킴-->
+    {% csrf_token %}
+    {% bootstrap_form post_form %}
+    {% buttons %}
+        <button type='submit' class='btn btn-primary'>Submit</button>
+    {% endbuttons %}
+</form>
+
+{% endblock %}
