@@ -14,13 +14,26 @@ def list(request):
 
 def create(request): #첫번째는 request를 인자로 받음
     if request.method == 'POST':
-        post_form = PostForm(request.POST)
+        post_form = PostForm(data=request.POST, files=request.FILES) #뒤에 POST, FILES는 대문자로 받기
         if post_form.is_valid():
             post_form.save() #forms에서 설정해 줘서 바로 post에 저장할 수 있음
             return redirect('posts:list')
     else:
         post_form = PostForm()
     return render(request, 'posts/create.html', {'post_form':post_form}) #여러개 app을 만들 경우, posts라는 앱이름으로 폴더명 경로를 넣어줌
+    
+    
+    
+def update(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post_form = PostForm(request.POST, request.FILES, instance=post) #instance=post가 create함수와 다른 부분!
+        if post_form.is_valid():
+            post_form.save() #forms에서 설정해 줘서 바로 post에 저장할 수 있음
+            return redirect('posts:list')
+    else: #주소창에 입력을 받았을 경우!
+        post_form = PostForm(instance=post)
+    return render(request, 'posts/create.html', {'post_form':post_form})
     
     
 

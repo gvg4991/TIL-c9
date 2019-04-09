@@ -38,6 +38,7 @@ INSTALLED_APPS = [ #설치할때마다 와서 적어주기
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
+    'imagekit',
     'posts', #app 폴더 이름 적기
 ]
 
@@ -120,3 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+#Media
+MEDIA_URL = '/media/' #aaa적어도 됨
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
