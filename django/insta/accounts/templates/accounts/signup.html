@@ -1,0 +1,13 @@
+{%extends 'base.html' %}
+
+{% block container %}
+
+<h1>사인업!</h1>
+
+<form method="POST"> <!--액션이 없으면 자기자신한테 반환-->
+    {% csrf_token %}
+    {{ signup_form }}
+    <input type="submit" value="Submit"/>
+</form>
+
+{% endblock %}

@@ -39,7 +39,8 @@ INSTALLED_APPS = [ #설치할때마다 와서 적어주기
     'django.contrib.staticfiles',
     'bootstrap4',
     'imagekit',
-    'posts', #app 폴더 이름 적기
+    'accounts',
+    'posts', #app 폴더 이름 적기 (app등록하기)
 ]
 
 MIDDLEWARE = [

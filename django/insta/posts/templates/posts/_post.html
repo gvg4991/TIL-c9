@@ -2,13 +2,18 @@
 파일이름에 언더바_가 있으면 부분적으로 쓰일 수 있는 파일을 의미시킴-->
 
 <div class="card" style="width: 18rem;">
+  <div class="card-header"> <!--유저네임 띄우기-->
+    <span>{{ post.user.username }}</span>
+  </div>
   {% if post.image %}
   <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.image }}">
   {% endif %}
   <div class="card-body">
     <p class="card-text">{{ post.content }}</p>
-    <a href="{% url 'posts:update' post.id %}" class="btn btn-info">Update</a>
+    {% if post.user == user %} <!--작성자와 유저가 같을때만 버튼생성-->
+    <a href="{% url 'posts:update' post.id %}" class="btn btn-info">Edit</a>
     <a href="{% url 'posts:delete' post.id %}" class="btn btn-warning">Delete</a>
     <!--post의 아이디를 받음-->
+    {% endif %}
   </div>
 </div>
