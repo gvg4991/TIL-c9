@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import get_user_model
 
 # Create your views here.
 def signup(request):
@@ -19,6 +20,7 @@ def signup(request):
     return render(request,'accounts/signup.html', {'signup_form':signup_form})
     
     
+# from django.contrib.auth import login as auth_login
 def login(request):
     if request.user.is_authenticated:
         return redirect('posts:list')
@@ -33,6 +35,14 @@ def login(request):
     return render(request, 'accounts/login.html', {'login_form':login_form})
     
     
+# from django.contrib.auth import logout as auth_logout
 def logout(request):
     auth_logout(request)
     return redirect('posts:list')
+    
+
+# from django.contrib.auth import get_user_model
+def people(request, username):
+    #get_user_model -> User
+    people = get_object_or_404(get_user_model(), username=username) #앞의 유저네임은 컬럼, 뒤에 유저네임은 주소로 부터 받은것
+    return render(request, 'accounts/people.html', {'people':people})

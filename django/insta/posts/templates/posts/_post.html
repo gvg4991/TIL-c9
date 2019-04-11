@@ -3,11 +3,23 @@
 
 <div class="card" style="width: 18rem;">
   <div class="card-header"> <!--유저네임 띄우기-->
-    <span>{{ post.user.username }}</span>
+    <a href="{% url 'people' post.user.username %}">{{ post.user.username }}</a>
   </div>
   {% if post.image %}
   <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.image }}">
   {% endif %}
+  <div class='card-body'>
+    <a href="{% url 'posts:like' post.id %}">
+      {% if user in post.like_users.all %}
+        <i class="fas fa-heart"></i>
+      {% else %}
+        <i class='far fa-heart'></i>
+      {% endif %}
+    </a>
+  <p class="card-text">
+    {{ post.like_users.count }}명이 좋아합니다.
+  </p>
+  </div>
   <div class="card-body">
     <p class="card-text">{{ post.content }}</p>
     {% if post.user == user %} <!--작성자와 유저가 같을때만 버튼생성-->
@@ -16,4 +28,27 @@
     <!--post의 아이디를 받음-->
     {% endif %}
   </div>
+  <div class="card-body">
+    {% for comment in post.comment_set.all %}
+      <div class="card-text">
+        <strong>{{ comment.user.username }}</strong> {{ comment.content }}
+        {% if comment.user == user %} <!--댓글 쓴 유저와 현재 로그인 유저가 같다면-->
+        <a href="{%url 'posts:comment_delete' post.id comment.id %}">삭제</a>
+        {% endif %}
+      </div>
+    {% empty %}
+      <div class='card-text'>댓글이 없습니다.</div>
+    {% endfor %}
+  </div>
+  {% if user.is_authenticated %}
+  <form action="{% url 'posts:comment_create' post.id %}" method = "POST">
+    {% csrf_token %}
+    <div class="input-group">
+      {{ comment_form }}
+      <div class="input-group-prepend">
+        <input type="submit" value="Submit" class='btn btn-info'/>
+      </div>
+    </div>
+  </form>
+  {% endif %}
 </div>

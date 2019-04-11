@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path, include #app폴더의 urls.py를 포함
 from django.conf.urls.static import static
 from django.conf import settings
+from accounts import views as accounts_views #어카운츠 앱의 뷰즈라고 이름변형
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('posts/', include('posts.urls')),
+    path('<str:username>/',accounts_views.people, name='people'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
