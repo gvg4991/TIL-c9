@@ -13,13 +13,17 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #외부키를 가지고옴, CASCADE(어떤게 삭제되면 그의 옵션들이 같이 삭제됨)
     content = models.TextField()
     # image = models.ImageField(blank=True)
-    image = ProcessedImageField(
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts')
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post,on_delete=models.CASCADE) #특정 포스터가 삭제됐을 때 어떻게 처리해줄지 정의
+    file = ProcessedImageField(
         upload_to = post_image_path, #저장위치
         processors = [ResizeToFill(600,600)], #처리할 작업 목록
         format='JPEG', #저장 포맷
         options={'quality':90}, #옵션
         )
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts')
 
 
 class Comment(models.Model):

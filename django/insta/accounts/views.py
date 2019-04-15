@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from .forms import CustomUserChangeForm #우리가 폼즈.py에 만든 폼을 가지고 와서 적용하겠다
+
 
 # Create your views here.
 def signup(request):
@@ -46,3 +49,44 @@ def people(request, username):
     #get_user_model -> User
     people = get_object_or_404(get_user_model(), username=username) #앞의 유저네임은 컬럼, 뒤에 유저네임은 주소로 부터 받은것
     return render(request, 'accounts/people.html', {'people':people})
+    
+    
+# USER edit(회원정보 수정) - user CRUD 중 U
+# from django.contrib.auth.decorators import login_required
+@login_required #로그인 했을때만 가능
+def update(request):
+    # 포스트폼을 만들어서 생성하고 수정하고 했음
+    # 장고에서 유저를 업데이트 하는 폼을 가지고있음 (UserChangeForm을 임포트)
+    if request.method == 'POST':
+        user_change_form = CustomUserChangeForm(request.POST, instance=request.user)
+        if user_change_form.is_valid():
+            user_change_form.save()
+            return redirect('people',request.user.username) #people페이지로 이동
+    else: #겟방식일때
+        # user_change_form = UserChangeForm(instance=request.user) #(인스턴스가 현재 유저인)폼의 정보를 변수에 저장 - 모든 정보를 수정할 수 있는 폼
+        user_change_form = CustomUserChangeForm(instance=request.user)
+    return render(request,'accounts/update.html',{'user_change_form':user_change_form}) #새로운 페이지(어카운츠의 업데이트html)를 보여줌
+    
+    
+# 회원 탈퇴 - suer CRUD 중 D
+@login_required
+def delete(request):
+    if request.method == 'POST': #포스트 방식이라면 삭제하고 리스트페이지로 이동
+        request.user.delete()
+        return redirect('posts:list')
+    return render(request, 'accounts/delete.html')
+    
+    
+# from django.contrib.auth.forms import PasswordChangeForm
+# from django.contrib.auth import update_session_auth_hash
+@login_required
+def password(request):
+    if request.method == 'POST':
+        password_change_form = PasswordChangeForm(request.user, request.POST)
+        if password_change_form.is_valid():
+            user = password_change_form.save()
+            update_session_auth_hash(request,user) #비번 바꾸고 로그인 상태 유지(비밀번호가 변경된 유저의 정보를 가지고 와서 세션 비밀번호에 넣는다)
+            return redirect('people',request.user.username)
+    else:
+        password_change_form = PasswordChangeForm(request.user) #어떠한 유저의 정보를 넣을건지만 작성하면됨('instance='' 필요없음)
+    return render(request, 'accounts/password.html',{'password_change_form':password_change_form})

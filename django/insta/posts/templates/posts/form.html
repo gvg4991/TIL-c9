@@ -9,6 +9,7 @@
 <form action="" method='post' enctype="multipart/form-data"> <!--액션이 없으면 자기자신 페이지에 반환시킴-->
     {% csrf_token %}
     {% bootstrap_form post_form %}
+    {{ image_formset.as_p }} <!--각자의 데이터를 p태그로 감싸줌(줄바꿈하기 위해)-->
     {% buttons %}
         <button type='submit' class='btn btn-primary'>Submit</button>
     {% endbuttons %}

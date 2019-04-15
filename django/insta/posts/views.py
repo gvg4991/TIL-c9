@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required #로그인 데코레이터
 from django.views.decorators.http import require_POST, require_http_methods
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, ImageFormSet #폼을 불러옴
 from .models import Post, Comment
+from django.db import transaction
 
 
 # Create your views here.
@@ -17,16 +18,28 @@ def list(request):
 @login_required #이 함수를 실행하려면 로그인이 되어있어야한다(데코레이터의 파라메터로 밑에있는 함수를 받음)
 def create(request): #첫번째는 request를 인자로 받음
     if request.method == 'POST':
-        post_form = PostForm(data=request.POST, files=request.FILES) #뒤에 POST, FILES는 대문자로 받기
-        if post_form.is_valid():
+        post_form = PostForm(data=request.POST) #뒤에 POST, FILES는 대문자로 받기 (content만 올라감)
+        image_formset = ImageFormSet(data=request.POST, files=request.FILES) #(이미지만 올라감)
+        if post_form.is_valid() and image_formset.is_valid(): #둘다 유효한가
             # 작성자명 입력
             post = post_form.save(commit=False) #데이터베이스에 저장할때 객체를 post라는 변수에 담음
             post.user = request.user #포스트라는 객체의 유저에 현재 유저를 입력
-            post.save() #실제 데이터베이스에 저장
+            
+            
+            # from django.db import transaction
+            with transaction.atomic(): #순서대로 진행할 수 있도록 보장해줌. (post가 생긴 다음에 이미지를 만들라!)
+                # 1. 포스트가 먼저 생성돼야됨(그래야 아이디값이 생김) 
+                post.save() #실제 데이터베이스에 저장
+                # 2. 이미지를 만듬
+                image_formset.instance = post #부모모델의 인스턴스를 넣어줌(유저 정보를 넣어줌) - 어렴노ㅠㅠ
+                image_formset.save()
+            
+            
             return redirect('posts:list')
     else:
         post_form = PostForm()
-    return render(request, 'posts/form.html', {'post_form':post_form}) #여러개 app을 만들 경우, posts라는 앱이름으로 폴더명 경로를 넣어줌
+        image_formset = ImageFormSet() #폼형식 데이터를 넣어줌
+    return render(request, 'posts/form.html', {'post_form':post_form, 'image_formset':image_formset,}) #여러개 app을 만들 경우, posts라는 앱이름으로 폴더명 경로를 넣어줌
     
     
     
@@ -39,12 +52,15 @@ def update(request, post_id):
     
     if request.method == 'POST':
         post_form = PostForm(request.POST, request.FILES, instance=post) #instance=post가 create함수와 다른 부분!
-        if post_form.is_valid():
+        image_formset = ImageFormSet(request.POST, request.FILES, instance=post)
+        if post_form.is_valid() and image_formset.is_valid():
             post_form.save() #forms에서 설정해 줘서 바로 post에 저장할 수 있음
+            image_formset.save()
             return redirect('posts:list')
     else: #주소창에 입력을 받았을 경우!
         post_form = PostForm(instance=post)
-    return render(request, 'posts/create.html', {'post_form':post_form})
+        image_formset = ImageFormSet(instance=post) #post가 가지고 있는 이미지를 가지고 만듬 
+    return render(request, 'posts/form.html', {'post_form':post_form, 'image_formset':image_formset,})
     
     
     
