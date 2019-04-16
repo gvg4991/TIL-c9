@@ -127,3 +127,6 @@ STATIC_URL = '/static/'
 #Media
 MEDIA_URL = '/media/' #aaa적어도 됨
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+#AUTH USER MODEL
+AUTH_USER_MODEL = 'accounts.User' #앞에 들어가는 accounts는 앱의 이름

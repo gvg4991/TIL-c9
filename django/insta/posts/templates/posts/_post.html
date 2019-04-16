@@ -3,7 +3,12 @@
 
 <div class="card" style="width: 18rem;">
   <div class="card-header"> <!--유저네임 띄우기-->
+    {% if post.user.profile.image %}
+    <img src="{{ post.user.profile.image.url }}" width='25'>
     <a href="{% url 'people' post.user.username %}">{{ post.user.username }}</a>
+    {% else %}
+    <a href="{% url 'people' post.user.username %}">{{ post.user.username }}</a>
+    {% endif %}
   </div>
   <div id="post_{{ post.id }}" class="carousel slide" data-ride="carousel"> <!--id 지정-->
   <div class="carousel-inner">

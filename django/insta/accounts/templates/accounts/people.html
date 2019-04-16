@@ -4,10 +4,40 @@
 
 
 <div class='container'>
-    <h1>{{ people.username }}</h1>
+    <div class="row">
+        <div class="col-3">
+            <h1>
+                {% if people.profile.image %}
+                <img src="{{ people.profile.image.url }}" width='50' alt="{{ people.profile.image }}">
+                {% endif %}
+                {{ people.username }}
+            </h1>
+        </div>
+        <div class="col-9">
+            <div>
+                <strong>{{ people.profile.nickname }}</strong>
+                {% if user != people %}
+                    {% if user in people.followers.all %}
+                    <a href="{% url 'accounts:follow' people.id %}">UnFollow</a>
+                    {% else %}
+                    <a href="{% url 'accounts:follow' people.id %}">Follow</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div>
+                <strong>Follwers: </strong>{{ people.followers.count }}
+                <strong>Follwings: </strong>{{ people.followings.count }}
+            </div>
+            <div>{{ people.profile.introduction }}</div>
+        </div>
+    </div>
+    
+    
+    <!--<h1>{{ people.username }}</h1>-->
     <!--유저정보수정-->
     {% if user == people %}
     <div>
+        <a href="{% url 'accounts:profile_update' %}">프로필 수정</a><span> | </span>
         <a href="{% url 'accounts:update' %}">계정 정보 수정</a>
     </div>
     {% endif %}

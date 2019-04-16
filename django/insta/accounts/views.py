@@ -4,7 +4,8 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserChangeForm #우리가 폼즈.py에 만든 폼을 가지고 와서 적용하겠다
+from .forms import CustomUserChangeForm, ProfileForm, CustomUserCreationForm #우리가 폼즈.py에 만든 폼을 가지고 와서 적용하겠다
+from .models import Profile
 
 
 # Create your views here.
@@ -13,13 +14,14 @@ def signup(request):
         return redirect('posts:list')
     
     if request.method == 'POST':
-        signup_form = UserCreationForm(request.POST) #리퀘스트 값을 받아와서 폼에 저장을함
+        signup_form = CustomUserCreationForm(request.POST) #리퀘스트 값을 받아와서 폼에 저장을함
         if signup_form.is_valid(): #아이디가 너무 쉬운지 검증
             user = signup_form.save() #통과되면 저장
+            Profile.objects.create(user=user)
             auth_login(request, user) #로그인할 윶의 객체를 넣어줌
             return redirect('posts:list') #로그인페이지로 돌려보냄(지금은 로그인 페이지 없어서 리스트페이지로 보냄)
     else:
-        signup_form = UserCreationForm()
+        signup_form = CustomUserCreationForm()
     return render(request,'accounts/signup.html', {'signup_form':signup_form})
     
     
@@ -90,3 +92,31 @@ def password(request):
     else:
         password_change_form = PasswordChangeForm(request.user) #어떠한 유저의 정보를 넣을건지만 작성하면됨('instance='' 필요없음)
     return render(request, 'accounts/password.html',{'password_change_form':password_change_form})
+    
+    
+# from .forms import ProfileForm
+def profile_update(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('people',request.user.username)
+    else:
+        profile_form = ProfileForm(instance = profile)
+    return render(request, 'accounts/profile_update.html', {'profile_form':profile_form,}) #profile_form을 사용하기위해 딕셔너리 형태로 넣어줌
+    
+    
+    
+# 팔로우
+def follow(request, user_id):
+    people = get_object_or_404(get_user_model(),id=user_id) #특정한 모델에서 id값이 특정 user에 저장
+        
+    if request.user in people.followers.all():    
+    # 2.people을 언팔하기
+        people.followers.remove(request.user)
+    else:
+    # 1.그 사람의 팔로워에 자신을 추가
+        people.followers.add(request.user) 
+        
+    return redirect('people',people.username)

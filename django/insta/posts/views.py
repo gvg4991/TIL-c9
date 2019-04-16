@@ -4,13 +4,28 @@ from django.views.decorators.http import require_POST, require_http_methods
 from .forms import PostForm, CommentForm, ImageFormSet #폼을 불러옴
 from .models import Post, Comment
 from django.db import transaction
+from itertools import chain
 
 
 # Create your views here.
 
 
-def list(request):
+def explore(request):
+    # 모든 포스트들을 보여줌
     posts = Post.objects.order_by('-id').all()
+    comment_form = CommentForm()
+    return render(request,'posts/list.html', {'posts':posts, 'comment_form':comment_form})
+
+
+@login_required
+def list(request):
+    # posts = Post.objects.order_by('-id').all()
+    # 1. 내가 follow하고 있는 사람들의 리스트
+    followings = request.user.followings.all()
+    # 2. 내 팔로잉 변수와 나를 묶음
+    followings = chain(followings,[request.user])
+    # 3. 이 사람들(팔로잉한 사람들)이 작성한 Post들만 뽑아옴
+    posts = Post.objects.filter(user__in=followings).order_by('-id') #특정한 컬럼이 어떠한 값을 가질때 가지고옴(__in을 통해 다양한 값의 리스트를 가지고옴)
     comment_form = CommentForm()
     return render(request,'posts/list.html', {'posts':posts, 'comment_form':comment_form}) #render일때, 변수 넘겨주기!
 
@@ -114,3 +129,6 @@ def like(request,post_id):
         #1.조아연
         post.like_users.add(request.user) #현재 로그인된 유저==request.user
     return redirect('posts:list')
+    
+    
+    
