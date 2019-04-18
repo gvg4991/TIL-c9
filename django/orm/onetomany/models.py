@@ -65,3 +65,5 @@ class Comment(models.Model):
 
 # 8. 댓글 중에 해당 게시글의 제목에 '1'이 들어가 있는것은?
 # Comment.objects.filter(post__title__contains='1')
+
+
