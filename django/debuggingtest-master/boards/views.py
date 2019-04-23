@@ -52,7 +52,7 @@ def edit(request, board_pk):
     else:
         board_update_form = BoardForm(instance=board)
     ctx = {
-        'form': board_update_form,
+        'board_update_form': board_update_form,
     }
     return render(request, 'boards/form.html', ctx)
 
@@ -68,7 +68,10 @@ def comment_create(request, board_pk):
     board = get_object_or_404(Board, pk=board_pk)
     comment_form = CommentForm(request.POST)
     if comment_form.is_valid():
-        comment_form.save()
+        comment = comment_form.save(commit=False)
+        comment.user = request.user
+        comment.board = board
+        comment.save()
     return redirect('boards:detail', board_pk)
 
 @login_required
