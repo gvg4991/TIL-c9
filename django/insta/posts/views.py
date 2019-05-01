@@ -5,6 +5,7 @@ from .forms import PostForm, CommentForm, ImageFormSet #폼을 불러옴
 from .models import Post, Comment
 from django.db import transaction
 from itertools import chain
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -120,15 +121,19 @@ def comment_delete(request, post_id, comment_id):
     
 
 @login_required
+# from django.http import JsonResponse
 def like(request,post_id):
     post = get_object_or_404(Post,id=post_id)
     if request.user in post.like_users.all():
         #2.조아연 취소
         post.like_users.remove(request.user)
+        liked = False
     else:
         #1.조아연
         post.like_users.add(request.user) #현재 로그인된 유저==request.user
-    return redirect('posts:list')
+        liked = True
+    # return redirect('posts:list')
+    return JsonResponse({'liked':liked, 'count':post.like_users.count()})
     
     
     
