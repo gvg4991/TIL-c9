@@ -106,7 +106,9 @@ def comment_create(request, post_id): #포스트의 정보를 가지고와서 �
         comment.user = request.user
         comment.post_id = post_id
         comment.save()
-    return redirect('posts:list') #댓글을 생성하는 페이지가 따로있는게 아니고 행동만 정의하면 돼서
+        
+    # return redirect('posts:list') #댓글을 생성하는 페이지가 따로있는게 아니고 행동만 정의하면 돼서
+    return JsonResponse({'id':comment.id, 'postId':post_id, 'username':comment.user.username, 'content':comment.content,}) #포스트 아이디값과 
     
 
 @require_http_methods(['GET','POST'])

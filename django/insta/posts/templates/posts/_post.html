@@ -43,7 +43,7 @@
     <!--post의 아이디를 받음-->
     {% endif %}
   </div>
-  <div class="card-body">
+  <div class="card-body" id="comment-list-{{post.id}}"> <!--id 값으로 카드 전체를 불러냄-->
     {% for comment in post.comment_set.all %}
       <div class="card-text">
         <strong>{{ comment.user.username }}</strong> {{ comment.content }}
@@ -56,7 +56,7 @@
     {% endfor %}
   </div>
   {% if user.is_authenticated %}
-  <form action="{% url 'posts:comment_create' post.id %}" method = "POST">
+  <form action="{% url 'posts:comment_create' post.id %}" method = "POST" class="comment-form">
     {% csrf_token %}
     <div class="input-group">
       {{ comment_form }}
